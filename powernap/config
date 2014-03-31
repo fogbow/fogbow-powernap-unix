@@ -178,10 +178,6 @@ STAGE2_ACTION_METHOD = 4
 [TCPMonitor]
 #ssh = 22
 
-# TestMonitor
-[TestMonitor]
-#nocheck = y
-
 # The [UDPMonitor] section lists all the UDP ports on which to listen
 # for data.
 # Each item listed will BIND a UDP port and listen to any data. Keep
@@ -214,8 +210,8 @@ STAGE2_ACTION_METHOD = 4
 #  keyboard = n
 #  keyboard = y
 [InputMonitor]
-#keyboard = y
-#mouse = y
+keyboard = y
+mouse = y
 
 # The [DiskMonitor] section lists the disk devices for which to track
 # standby/sleep status.  If any of the devices are active/idle the
