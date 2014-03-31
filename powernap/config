@@ -21,15 +21,18 @@
 # at "/etc/powernap/action", or suspend, hibernate, poweroff.
 ACTION_METHOD = 4
 
-# Action to run when trying to recover the machine from powersave state
+# Action to run when the monitor detects activity in the resource
 # The default action is "/usr/sbin/pm-powersave false"
-RECOVER_ACTION = "touch /tmp/powernap-recover"
+RECOVER_ACTION = "/var/lib/fogbow-opportunism/actions/openstack/stop-node"
+
+# Action to run when the resource is idle
+ACTION = "/var/lib/fogbow-opportunism/actions/openstack/start-node"
 
 # Number of seconds that all monitors must have no activity or must be absent.
 # The default is an absence period of 30 seconds.
 # Example:
 #   ABSENT_SECONDS = 30
-ABSENT_SECONDS = 0
+ABSENT_SECONDS = 300
 
 # Grace period, after (ABSENT_SECONDS - GRACE_SECONDS) have elapsed with all of
 # the Monitors with absent activity, the system will send a Wall message for an
