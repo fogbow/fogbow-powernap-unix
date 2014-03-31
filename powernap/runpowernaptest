@@ -1,0 +1,3 @@
+#!/bin/bash
+export PYTHONPATH=/home/marcosancj/git/powernap
+python ./sbin/powernapdtest
