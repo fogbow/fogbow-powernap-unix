@@ -1,0 +1,3 @@
+#!/bin/bash
+export PYTHONPATH=/var/lib/fogbow-opportunism/lib
+/var/lib/fogbow-opportunism/bin/powernapd

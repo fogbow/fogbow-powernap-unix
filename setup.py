@@ -8,7 +8,8 @@ setup(name = 'fogbow-opportunism',
       author = 'Marcos Nobrega',
       author_email = 'marcosancj@lsd.ufcg.edu.br',
       url = 'https://github.com/fogbow/fogbow-opportunism',
-      packages = ['powernap'],
+      packages = ['powernap', 'powernap.monitors'],
       package_dir = {'powernap': 'powernap/powernap'},
-      scripts = ['powernap/sbin/powernapd']
+      scripts = ['powernap/sbin/powernapd'],
+      data_files = [('/etc/powernap', ['powernap/config'])]
      )
