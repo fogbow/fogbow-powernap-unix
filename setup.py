@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os, sys
 from distutils.core import setup
 
 setup(name = 'fogbow-opportunism',
@@ -11,5 +12,9 @@ setup(name = 'fogbow-opportunism',
       packages = ['powernap', 'powernap.monitors'],
       package_dir = {'powernap': 'powernap/powernap'},
       scripts = ['powernap/sbin/powernapd'],
-      data_files = [('/etc/powernap', ['powernap/config'])]
+      data_files = [('/etc/powernap', ['powernap/config']), 
+                    ('/etc/init.d', ['contrib/init.d/fogbow-opportunism'])]
      )
+     
+if "install" in sys.argv:     
+    os.system('update-rc.d fogbow-opportunism defaults 99')

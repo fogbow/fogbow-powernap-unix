@@ -14,10 +14,10 @@ NAME=fogbow-opportunism
 DAEMON_BASE=/var/lib/fogbow-opportunism
 DAEMON_LIB=$DEAMON_BASE/lib
 DAEMON=$DAEMON_BASE/bin/powernapd
-DAEMON_ARGS="start"
-PIDPATH=/var/run
+PIDFILE=/var/run/powernap.pid
 SCRIPTNAME=/etc/init.d/$NAME
-PUSER=fogbow
+
+export PYTHONPATH=$DEAMON_LIB
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
@@ -41,14 +41,9 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-	export PYTHONPATH=$DEAMON_BASE
-	mkdir -p $PIDPATH
-	chown -R fogbow:fogbow $PIDPATH
-	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON --pidfile $PIDPATH/powernap.pid --test > /dev/null \
+	start-stop-daemon --start --quiet --exec $DAEMON --pidfile $PIDFILE --test > /dev/null \
 		|| return 1
-	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON -- \
-		$DAEMON_ARGS \
-		|| return 2
+	start-stop-daemon --start --quiet --exec $DAEMON || return 2
 }
 
 #
@@ -61,16 +56,8 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON stop
-	RETVAL="$?"
-	[ "$RETVAL" = 2 ] && return 2
-	
-    for PIDFILE in `ls $PIDPATH/powernap*.pid`; do
-    	start-stop-daemon --stop --quiet --oknodo --retry=0/5/KILL/5 --pidfile $PIDFILE 
-    	rm -f $PIDFILE
-    done
-
-	return "$RETVAL"
+    start-stop-daemon --stop --quiet --oknodo --retry=0/5/KILL/5 --pidfile $PIDFILE 
+    rm -f $PIDFILE
 }
 
 case "$1" in
