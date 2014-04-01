@@ -15,7 +15,7 @@ DAEMON_BASE=/var/lib/fogbow-opportunism
 DAEMON_LIB=$DEAMON_BASE/lib
 DAEMON=$DAEMON_BASE/bin/powernapd
 DAEMON_ARGS="start"
-PIDPATH=/var/run/fogbow-opportunism
+PIDPATH=/var/run
 SCRIPTNAME=/etc/init.d/$NAME
 PUSER=fogbow
 
@@ -44,7 +44,7 @@ do_start()
 	export PYTHONPATH=$DEAMON_BASE
 	mkdir -p $PIDPATH
 	chown -R fogbow:fogbow $PIDPATH
-	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON --pidfile $PIDPATH/$NAME.pid --test > /dev/null \
+	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON --pidfile $PIDPATH/powernap.pid --test > /dev/null \
 		|| return 1
 	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON -- \
 		$DAEMON_ARGS \
@@ -65,7 +65,7 @@ do_stop()
 	RETVAL="$?"
 	[ "$RETVAL" = 2 ] && return 2
 	
-    for PIDFILE in `ls $PIDPATH/$NAME*.pid`; do
+    for PIDFILE in `ls $PIDPATH/powernap*.pid`; do
     	start-stop-daemon --stop --quiet --oknodo --retry=0/5/KILL/5 --pidfile $PIDFILE 
     	rm -f $PIDFILE
     done
