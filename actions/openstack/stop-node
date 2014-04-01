@@ -7,14 +7,14 @@ config = ConfigParser.ConfigParser()
 config.readfp(open('/etc/nova/nova.conf'))
 
 nt = client.Client(
-  config.get('keystone_authtoken', 'admin_user'), 
-  config.get('keystone_authtoken', 'admin_password'), 
-  config.get('keystone_authtoken', 'admin_tenant_name'), 
+  config.get('keystone_authtoken', 'admin_user'),
+  config.get('keystone_authtoken', 'admin_password'),
+  config.get('keystone_authtoken', 'admin_tenant_name'),
   '%s://%s:%s/v2.0' % (
     config.get('keystone_authtoken', 'auth_protocol'),
-    config.get('keystone_authtoken', 'auth_host'), 
+    config.get('keystone_authtoken', 'auth_host'),
     config.get('keystone_authtoken', 'auth_port')
-  ), 
+  ),
   service_type='compute')
 
 p = os.popen('hostname')
@@ -26,4 +26,5 @@ server_list = nt.servers.list(search_opts=search_opts)
 for each_server in server_list:
   each_server.force_delete()
 
-client.hosts.get(host).shutdown()
+nt.services.disable(host,'nova-compute')
+nt.services.disable(host,'nova-network')

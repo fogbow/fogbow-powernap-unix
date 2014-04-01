@@ -21,4 +21,5 @@ p = os.popen('hostname')
 host = p.readline().strip()
 p.close()
 
-client.hosts.get(host).startup()
+nt.services.enable(host, 'nova-compute')
+nt.services.enable(host, 'nova-network')
