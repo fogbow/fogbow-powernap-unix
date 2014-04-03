@@ -52,7 +52,7 @@ GRACE_SECONDS = 0
 # The default interval is 1 second.
 # Example:
 #   INTERVAL_SECONDS = 1
-INTERVAL_SECONDS = 1
+INTERVAL_SECONDS = 10
 
 # The powernap daemon will issue a warning message to the console whenever it
 # has entered into GRACE period. This warning message will warn the user that
@@ -64,7 +64,7 @@ INTERVAL_SECONDS = 1
 # Example
 #   WARN = y
 #   WARN = n
-WARN = y
+WARN = n
 
 # The powernap daemon logs errors to /var/log/powernap.err, and some basic
 # information to /var/log/powernap.log.  To change the verbosity of this

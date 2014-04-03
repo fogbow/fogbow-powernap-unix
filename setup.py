@@ -13,7 +13,9 @@ setup(name = 'fogbow-opportunism',
       package_dir = {'powernap': 'powernap/powernap'},
       scripts = ['powernap/sbin/powernapd'],
       data_files = [('/etc/powernap', ['powernap/config']), 
-                    ('/var/lib/fogbow-opportunism', ['actions']), 
+                    ('/var/lib/fogbow-opportunism/actions/openstack', [
+                      'actions/openstack/stop-node', 
+                      'actions/openstack/start-node']), 
                     ('/etc/init.d', ['contrib/init.d/fogbow-opportunism'])]
      )
      
