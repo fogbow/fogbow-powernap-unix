@@ -3,6 +3,14 @@
 import os, sys
 from distutils.core import setup
 
+data_files = [('/etc/powernap', ['powernap/config']), 
+              ('/etc/init.d', ['contrib/init.d/fogbow-opportunism'])]
+              
+for action_dir in os.listdir('actions'):
+  action_scripts = [os.path.join('actions', action_dir, 'stop-node'), 
+                    os.path.join('actions', action_dir, 'start-node')]
+  data_files.append((os.path.join('actions', action_dir), action_scripts))
+
 setup(name = 'fogbow-opportunism',
       version = '1.0',
       description = 'Opportunism module for fogbow cloud',
@@ -12,12 +20,8 @@ setup(name = 'fogbow-opportunism',
       packages = ['powernap', 'powernap.monitors'],
       package_dir = {'powernap': 'powernap/powernap'},
       scripts = ['powernap/sbin/powernapd'],
-      data_files = [('/etc/powernap', ['powernap/config']), 
-                    ('/var/lib/fogbow-opportunism/actions/openstack', [
-                      'actions/openstack/stop-node', 
-                      'actions/openstack/start-node']), 
-                    ('/etc/init.d', ['contrib/init.d/fogbow-opportunism'])]
+      data_files = data_files
      )
      
 if "install" in sys.argv:     
-    os.system('update-rc.d fogbow-opportunism defaults 99')
+  os.system('update-rc.d fogbow-opportunism defaults 99')
