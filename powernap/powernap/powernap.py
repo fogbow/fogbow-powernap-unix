@@ -155,6 +155,8 @@ class PowerNap:
             #    self.MONITORS.append({"monitor":monitor, "name":items[0], "regex":items[1]})
         if monitor == "ConsoleMonitor" and (items[1] == "y" or items[1] == "yes"):
             self.MONITORS.append({"monitor":monitor, "name":items[0]})
+        if monitor == "PS2Monitor" and (items[1] == "y" or items[1] == "yes"):
+            self.MONITORS.append({"monitor":monitor, "name":items[0]})
         if monitor == "LoadMonitor":
             self.MONITORS.append({"monitor":monitor, "name":items[0], "threshold":items[1]})
         if monitor == "TCPMonitor":
@@ -185,6 +187,8 @@ class PowerNap:
                 p = InputMonitor.InputMonitor(config)
             if config["monitor"] == "ConsoleMonitor":
                 p = ConsoleMonitor.ConsoleMonitor(config)
+            if config["monitor"] == "PS2Monitor":
+                p = PS2Monitor.PS2Monitor(config)
             if config["monitor"] == "IOMonitor":
                 p = IOMonitor.IOMonitor(config)
             if config["monitor"] == "TCPMonitor":

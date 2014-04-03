@@ -142,6 +142,9 @@ STAGE2_ACTION_METHOD = 4
 [ConsoleMonitor]
 #ptmx = y
 
+[PS2Monitor]
+ps2 = y
+
 # The [ProcessMonitor] section lists all the processes to Monitor by using
 # regular expressions.
 # Each item listed will be compared against the output of "ps -eo args".
