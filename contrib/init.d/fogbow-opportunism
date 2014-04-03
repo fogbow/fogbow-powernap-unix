@@ -12,12 +12,12 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Starts the fogbow-opportunism module of Fogbow(fogbowcloud.org)"
 NAME=fogbow-opportunism
 DAEMON_BASE=/var/lib/fogbow-opportunism
-DAEMON_LIB=$DEAMON_BASE/lib
+DAEMON_LIB=$DAEMON_BASE/lib
 DAEMON=$DAEMON_BASE/bin/powernapd
 PIDFILE=/var/run/powernap.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
-export PYTHONPATH=$DEAMON_LIB
+export PYTHONPATH=$DAEMON_LIB
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
