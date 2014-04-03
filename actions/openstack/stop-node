@@ -3,9 +3,6 @@
 from novaclient.v1_1 import client
 import ConfigParser, os, time
 
-DELETE_TRIES = 10
-DELETE_SLEEP = 5
-
 config = ConfigParser.ConfigParser()
 config.readfp(open('/etc/nova/nova.conf'))
 
