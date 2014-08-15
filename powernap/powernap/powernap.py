@@ -25,8 +25,8 @@ from monitors import ProcessMonitor, LoadMonitor, InputMonitor, TCPMonitor, UDPM
 class PowerNap:
 
     def __init__(self):
-        self.PKG = "powernap"
-        self.CONFIG = "/etc/powernap/config"
+        self.PKG = "fogbow-powernap"
+        self.CONFIG = "/etc/fogbow-powernap/config"
         self.ACTION = "/usr/sbin/powernap"
         self.RECOVER_ACTION = "/usr/sbin/pm-powersave false"
         self.CUSTOM_RECOVER_ACTION = False
