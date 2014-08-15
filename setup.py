@@ -3,8 +3,8 @@
 import os, sys
 from distutils.core import setup
 
-data_files = [('/etc/powernap', ['powernap/config']), 
-              ('/etc/init.d', ['contrib/init.d/fogbow-opportunism'])]
+data_files = [('/etc/fogbow-powernap', ['powernap/config']), 
+              ('/etc/init', ['contrib/upstart/fogbow-powernap.conf'])]
               
 for action_dir in os.listdir('actions'):
   action_scripts = [os.path.join('actions', action_dir, 'stop-node'), 
@@ -24,4 +24,4 @@ setup(name = 'fogbow-opportunism',
      )
      
 if "install" in sys.argv:     
-  os.system('update-rc.d fogbow-opportunism defaults 99')
+  os.system('service fogbow-powernap start')
