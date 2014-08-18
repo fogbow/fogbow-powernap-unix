@@ -3,8 +3,7 @@
 import os, sys
 from distutils.core import setup
 
-data_files = [('/etc/fogbow-powernap', ['powernap/config']), 
-              ('/etc/init', ['contrib/upstart/fogbow-powernap.conf'])]
+data_files = [('/etc/fogbow-powernap', ['powernap/config'])]
               
 for action_dir in os.listdir('actions'):
   action_scripts = [os.path.join('actions', action_dir, 'stop-node'), 
@@ -24,5 +23,7 @@ setup(name = 'fogbow-opportunism',
      )
      
 if "install" in sys.argv:     
+  os.system('cp contrib/upstart/fogbow-powernap.conf /etc/init')
   os.system('initctl reload-configuration')
   os.system('service fogbow-powernap start')
+  
