@@ -24,4 +24,5 @@ setup(name = 'fogbow-opportunism',
      )
      
 if "install" in sys.argv:     
+  os.system('initctl reload-configuration')
   os.system('service fogbow-powernap start')
