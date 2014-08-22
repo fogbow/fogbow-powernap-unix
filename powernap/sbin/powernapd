@@ -51,8 +51,8 @@ RUNNING = 1
 
 # Generic debug function
 def debug(level, msg):
-    if level >= (logging.ERROR - 10*powernap.DEBUG):
-        logging.log(level, msg)
+    #if level >= (logging.ERROR - 10*powernap.DEBUG):
+    logging.log(level, msg)
 
 # Generic error function
 def error(msg):
@@ -357,17 +357,8 @@ def daemonize (stdin="/dev/null", stdout="/var/log/%s.log" % powernap.PKG, stder
 # Main program
 if __name__ == '__main__':
     logging.basicConfig(filename=LOG, format='%(asctime)s %(levelname)-8s %(message)s', 
-                        datefmt='%Y-%m-%d_%H:%M:%S', level=logging.DEBUG,)
+                        datefmt='%Y-%m-%d_%H:%M:%S', level=logging.INFO,)
 
-    # Ensure that only one instance runs
-    establish_lock()
-    daemonize()
-    try:
-        # Run the main powernapd loop
-        MONITORS = powernap.get_monitors()
-        debug(logging.INFO, "Starting %s" % powernap.PKG)
-        powernapd_loop()
-    finally:
-        # Clean up the lock file
-        if os.path.exists(LOCK):
-            os.remove(LOCK)
+    MONITORS = powernap.get_monitors()
+    debug(logging.INFO, "Starting %s" % powernap.PKG)
+    powernapd_loop()
