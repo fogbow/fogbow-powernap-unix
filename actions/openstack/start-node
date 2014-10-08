@@ -1,25 +1,46 @@
 #!/usr/bin/python
 
 from novaclient.v1_1 import client
-import ConfigParser, os
+import ConfigParser, os, sys
 
-config = ConfigParser.ConfigParser()
-config.readfp(open('/etc/nova/nova.conf'))
+nt = None
+config = None
 
-nt = client.Client(
-  config.get('keystone_authtoken', 'admin_user'), 
-  config.get('keystone_authtoken', 'admin_password'), 
-  config.get('keystone_authtoken', 'admin_tenant_name'), 
-  '%s://%s:%s/v2.0' % (
-    config.get('keystone_authtoken', 'auth_protocol'),
-    config.get('keystone_authtoken', 'auth_host'), 
-    config.get('keystone_authtoken', 'auth_port')
-  ), 
-  service_type='compute')
+try:
+  config = ConfigParser.ConfigParser()
+  config.readfp(open('/etc/nova/nova.conf'))
 
-p = os.popen('hostname')
-host = p.readline().strip()
-p.close()
+  nt = client.Client(
+    config.get('keystone_authtoken', 'admin_user'),
+    config.get('keystone_authtoken', 'admin_password'),
+    config.get('keystone_authtoken', 'admin_tenant_name'),
+    '%s://%s:%s/v2.0' % (
+      config.get('keystone_authtoken', 'auth_protocol'),
+      config.get('keystone_authtoken', 'auth_host'),
+      config.get('keystone_authtoken', 'auth_port')
+    ),
+    service_type='compute')
 
-nt.services.enable(host, 'nova-compute')
-nt.services.enable(host, 'nova-network')
+except (Exception):
+  pass
+
+if (not nt or not config):
+  sys.exit(0)
+
+host = None
+
+try:
+  if (config.has_option('DEFAULT', 'host')):
+    host = config.get('DEFAULT', 'host')
+  else:
+    p = os.popen('hostname')
+    host = p.readline().strip()
+    p.close()
+except(Exception):
+  sys.exit(0)
+
+if (host):
+  try:
+    nt.services.enable(host, 'nova-compute')
+  except (Exception):
+    pass

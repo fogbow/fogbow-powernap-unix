@@ -1,4 +1,4 @@
-[powernap]
+[fogbow-powernap]
 # This is the configuration file for PowerNap.
 # See powernap(1) for more information.
 
@@ -92,7 +92,7 @@ WATCH_CONFIG = n
 ############################################################################
 ####                        STAGE2 ACTION                               ####
 ############################################################################
-[powernap-stage2]
+[fogbow-powernap-stage2]
 # Number of seconds that all monitors must have no activity or must be absent
 # while running in PowerSave mode to perform the STAGE2_ACTION_METHOD.
 # The default value is to be disabled by default. If you wish to enable the

@@ -1,34 +1,55 @@
 #!/usr/bin/python
 
 from novaclient.v1_1 import client
-import ConfigParser, os, time
+import ConfigParser, os, sys
 
-config = ConfigParser.ConfigParser()
-config.readfp(open('/etc/nova/nova.conf'))
+nt = None
+config = None
 
-nt = client.Client(
-  config.get('keystone_authtoken', 'admin_user'),
-  config.get('keystone_authtoken', 'admin_password'),
-  config.get('keystone_authtoken', 'admin_tenant_name'),
-  '%s://%s:%s/v2.0' % (
-    config.get('keystone_authtoken', 'auth_protocol'),
-    config.get('keystone_authtoken', 'auth_host'),
-    config.get('keystone_authtoken', 'auth_port')
-  ),
-  service_type='compute')
+try:
+  config = ConfigParser.ConfigParser()
+  config.readfp(open('/etc/nova/nova.conf'))
 
-p = os.popen('hostname')
-host = p.readline().strip()
-p.close()
+  nt = client.Client(
+    config.get('keystone_authtoken', 'admin_user'),
+    config.get('keystone_authtoken', 'admin_password'),
+    config.get('keystone_authtoken', 'admin_tenant_name'),
+    '%s://%s:%s/v2.0' % (
+      config.get('keystone_authtoken', 'auth_protocol'),
+      config.get('keystone_authtoken', 'auth_host'),
+      config.get('keystone_authtoken', 'auth_port')
+    ),
+    service_type='compute')
 
-search_opts = {'host': host, 'all_tenants': 1}
-server_list = nt.servers.list(search_opts=search_opts)
-for each_server in server_list:
-  each_server.stop()
+except:
+  sys.exit(0)
 
-server_list = nt.servers.list(search_opts=search_opts)
-for each_server in server_list:
-  each_server.delete()
+host = None
 
-nt.services.disable(host,'nova-compute')
-nt.services.disable(host,'nova-network')
+try:
+  if (config.has_option('DEFAULT', 'host')):
+    host = config.get('DEFAULT', 'host')
+  else:
+    p = os.popen('hostname')
+    host = p.readline().strip()
+    p.close()
+except:
+  sys.exit(0)
+
+if (host):
+  try:
+    search_opts = {'host': host, 'all_tenants': 1}
+    server_list = nt.servers.list(search_opts=search_opts)
+    for each_server in server_list:
+      each_server.stop()
+
+    server_list = nt.servers.list(search_opts=search_opts)
+    for each_server in server_list:
+      each_server.delete()
+  except:
+    pass
+
+  try:
+    nt.services.disable(host, 'nova-compute')
+  except:
+    pass
