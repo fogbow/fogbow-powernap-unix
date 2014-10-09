@@ -18,7 +18,7 @@ setup(name = 'fogbow-opportunism',
       url = 'https://github.com/fogbow/fogbow-powernap-unix',
       packages = ['powernap', 'powernap.monitors'],
       package_dir = {'powernap': 'powernap/powernap'},
-      scripts = ['powernap/sbin/powernapd'],
+      scripts = ['powernap/sbin/fogbow-powernapd'],
       data_files = data_files
      )
      
