@@ -23,16 +23,16 @@ ACTION_METHOD = 4
 
 # Action to run when the monitor detects activity in the resource
 # The default action is "/usr/sbin/pm-powersave false"
-RECOVER_ACTION = "/var/lib/fogbow-opportunism/actions/openstack/stop-node"
+RECOVER_ACTION = "/usr/share/fogbow-powernap/actions/openstack/stop-node"
 
 # Action to run when the resource is idle
-ACTION = "/var/lib/fogbow-opportunism/actions/openstack/start-node"
+ACTION = "/usr/share/fogbow-powernap/actions/openstack/start-node"
 
 # Number of seconds that all monitors must have no activity or must be absent.
 # The default is an absence period of 30 seconds.
 # Example:
 #   ABSENT_SECONDS = 30
-ABSENT_SECONDS = 300
+ABSENT_SECONDS = 1200
 
 # Grace period, after (ABSENT_SECONDS - GRACE_SECONDS) have elapsed with all of
 # the Monitors with absent activity, the system will send a Wall message for an
@@ -52,7 +52,7 @@ GRACE_SECONDS = 0
 # The default interval is 1 second.
 # Example:
 #   INTERVAL_SECONDS = 1
-INTERVAL_SECONDS = 10
+INTERVAL_SECONDS = 30
 
 # The powernap daemon will issue a warning message to the console whenever it
 # has entered into GRACE period. This warning message will warn the user that
