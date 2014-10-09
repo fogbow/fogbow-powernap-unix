@@ -224,6 +224,8 @@ def powernapd_loop():
     grace_seconds = powernap.GRACE_SECONDS
     stage2_grace_seconds = int(powernap.STAGE2_ABSENT_SECONDS/4)
     unflag_powersave()
+    # starting fogbow-powernapd as idle
+    flag_customaction()
     users_warned = False
     watch_config_timestamp = os.stat(powernap.CONFIG).st_mtime
 

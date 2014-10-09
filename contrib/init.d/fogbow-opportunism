@@ -13,8 +13,8 @@ DESC="Starts the fogbow-opportunism module of Fogbow(fogbowcloud.org)"
 NAME=fogbow-opportunism
 DAEMON_BASE=/var/lib/fogbow-opportunism
 DAEMON_LIB=$DAEMON_BASE/lib
-DAEMON=$DAEMON_BASE/bin/powernapd
-PIDFILE=/var/run/powernap.pid
+DAEMON=$DAEMON_BASE/bin/fogbow-powernapd
+PIDFILE=/var/run/fogbow-powernap.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
 export PYTHONPATH=$DAEMON_LIB
