@@ -45,8 +45,9 @@ except:
 global LOCK, CONFIG, MONITORS, RUNNING
 LOCK = "/var/run/%s.pid" % powernap.PKG
 LOG = "/var/log/%s.log" % powernap.PKG
-POWERSAVE_FLAG = "/var/run/%s/powersave" % powernap.PKG
-CUSTOMACTION_FLAG = "/var/run/%s/custom" % powernap.PKG
+PACKAGE_DIR = "/var/run/%s" % powernap.PKG
+POWERSAVE_FLAG = "%s/powersave" % PACKAGE_DIR
+CUSTOMACTION_FLAG = "%s/custom" % PACKAGE_DIR
 RUNNING = 1
 
 # Generic debug function
@@ -216,6 +217,9 @@ def take_action_stage2():
     os.system("%s %s" % (powernap.ACTION, powernap.STAGE2_ACTION_METHOD))
 
 def powernapd_loop():
+    # create custom action flag directory if not exists
+    if not os.path.exists(PACKAGE_DIR):
+        os.makedirs(PACKAGE_DIR)
     # Starting the Monitors
     for monitor in MONITORS:
         debug(logging.DEBUG, "Starting [%s:%s]" % (monitor._type, monitor._name))
