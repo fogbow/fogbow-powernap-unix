@@ -1,0 +1,37 @@
+#!/usr/bin/python
+
+import urllib2
+import urllib
+import hashlib
+import hmac
+import base64
+import json
+
+adminApiKey = 'r7ll2d7yti_-fOAZY_lDJ3h-oWXKQW8WzPTqRWV89mOhJZK-ffUskCx88-B33iqSzyXEjLwoKeKKNbs3HBwaPw'
+adminSecretKey = 'cLk2lPPMWKWyN9lGPohO7p5_742GbUJhkB8pwV_9MCXshSRVeU8C8mKQaIGMRFrSPcOJ7EVhlAoMVGh340-CMA'
+
+props = dict(line.strip().split('=') for line in open('/etc/cloudstack/agent/agent.properties') if not line.startswith('#') and not line.startswith('\n'))
+
+host= props['host']
+hostid = props['LibvirtComputingResource.id']
+baseurl='http://'+host+':8080/client/api?'
+
+updateHostRequest={}
+updateHostRequest['command']='updateHost'
+updateHostRequest['response']='json'
+updateHostRequest['id']=hostid
+updateHostRequest['allocationstate']='Enable'
+
+updateHostRequest['apikey']=adminApiKey
+
+request_str='&'.join(['='.join([k,urllib.quote_plus(updateHostRequest[k])]) for k in updateHostRequest.keys()])
+
+sig_str='&'.join(['='.join([k.lower(),urllib.quote_plus(updateHostRequest[k].lower().replace('+','%20'))])for k in sorted(updateHostRequest.iterkeys())])
+sig=hmac.new(adminSecretKey,sig_str,hashlib.sha1)
+sig=hmac.new(adminSecretKey,sig_str,hashlib.sha1).digest()
+sig=base64.encodestring(hmac.new(adminSecretKey,sig_str,hashlib.sha1).digest())
+sig=base64.encodestring(hmac.new(adminSecretKey,sig_str,hashlib.sha1).digest()).strip()
+sig=urllib.quote_plus(base64.encodestring(hmac.new(adminSecretKey,sig_str,hashlib.sha1).digest()).strip())
+
+req=baseurl+request_str+'&signature='+sig
+res=urllib2.urlopen(req)

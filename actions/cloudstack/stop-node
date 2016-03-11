@@ -1,0 +1,101 @@
+#!/usr/bin/python
+
+import urllib2
+import urllib
+import hashlib
+import hmac
+import base64
+import json
+
+userApikey = 'r7ll2d7yti_-fOAZY_lDJ3h-oWXKQW8WzPTqRWV89mOhJZK-ffUskCx88-B33iqSzyXEjLwoKeKKNbs3HBwaPw'
+#userApikey = 'rtD5O18BoBp52sJeGpttBuzIFpNo2-l44sa7p_XKEfCJo26-5K2DxcNgjxpH-zVKsDmd5YSWGWcllc9JUJAkDg'
+userSecretkey = 'cLk2lPPMWKWyN9lGPohO7p5_742GbUJhkB8pwV_9MCXshSRVeU8C8mKQaIGMRFrSPcOJ7EVhlAoMVGh340-CMA'
+#userSecretkey = '2p1L_UazHCOgigOHVptsPPTGDSs60hRr2FN1mS9nuNRurHmaDk_TEsxtIr8zzJian4Rxt8AVAgkSuYJxa5l5_g'
+
+adminApiKey = 'r7ll2d7yti_-fOAZY_lDJ3h-oWXKQW8WzPTqRWV89mOhJZK-ffUskCx88-B33iqSzyXEjLwoKeKKNbs3HBwaPw'
+adminSecretKey = 'cLk2lPPMWKWyN9lGPohO7p5_742GbUJhkB8pwV_9MCXshSRVeU8C8mKQaIGMRFrSPcOJ7EVhlAoMVGh340-CMA'
+
+props = dict(line.strip().split('=') for line in open('/etc/cloudstack/agent/agent.properties') if not line.startswith('#') and not line.startswith('\n'))
+
+host= props['host']
+hostid = props['LibvirtComputingResource.id']
+baseurl='http://'+host+':8080/client/api?'
+
+
+#Listing all vms on this host.
+
+request={}
+request['command']='listVirtualMachines'
+request['response']='json'
+request['hostid']=hostid
+
+request['apikey']=userApikey
+
+request_str='&'.join(['='.join([k,urllib.quote_plus(request[k])]) for k in request.keys()])
+
+
+sig_str='&'.join(['='.join([k.lower(),urllib.quote_plus(request[k].lower().replace('+','%20'))])for k in sorted(request.iterkeys())])
+sig=hmac.new(userSecretkey,sig_str,hashlib.sha1)
+sig=hmac.new(userSecretkey,sig_str,hashlib.sha1).digest()
+sig=base64.encodestring(hmac.new(userSecretkey,sig_str,hashlib.sha1).digest())
+sig=base64.encodestring(hmac.new(userSecretkey,sig_str,hashlib.sha1).digest()).strip()
+sig=urllib.quote_plus(base64.encodestring(hmac.new(userSecretkey,sig_str,hashlib.sha1).digest()).strip())
+
+req=baseurl+request_str+'&signature='+sig
+res=urllib2.urlopen(req)
+jsonReturn = json.loads(res.read())
+
+#DESTROING ALL VMS OF THIS HOST
+
+if(jsonReturn['listvirtualmachinesresponse'] and jsonReturn['listvirtualmachinesresponse']['virtualmachine']):
+
+  vms = jsonReturn['listvirtualmachinesresponse']['virtualmachine']
+
+  for i in range(len(vms)):
+
+    vmId = vms[i]['id']
+
+    requestDelete={}
+    requestDelete['command']='destroyVirtualMachine'
+    requestDelete['response']='json'
+    requestDelete['id']=vmId
+    requestDelete['expunge']='true'
+
+    requestDelete['apikey']=userApikey
+
+    request_str='&'.join(['='.join([k,urllib.quote_plus(requestDelete[k])]) for k in requestDelete.keys()])
+
+
+    sig_str='&'.join(['='.join([k.lower(),urllib.quote_plus(requestDelete[k].lower().replace('+','%20'))])for k in sorted(requestDelete.iterkeys())])
+    sig=hmac.new(userSecretkey,sig_str,hashlib.sha1)
+    sig=hmac.new(userSecretkey,sig_str,hashlib.sha1).digest()
+    sig=base64.encodestring(hmac.new(userSecretkey,sig_str,hashlib.sha1).digest())
+    sig=base64.encodestring(hmac.new(userSecretkey,sig_str,hashlib.sha1).digest()).strip()
+    sig=urllib.quote_plus(base64.encodestring(hmac.new(userSecretkey,sig_str,hashlib.sha1).digest()).strip())
+
+    req=baseurl+request_str+'&signature='+sig
+    res=urllib2.urlopen(req)
+
+else:
+  print('No vms to be destroyed')
+#Disabling host.
+
+updateHostRequest={}
+updateHostRequest['command']='updateHost'
+updateHostRequest['response']='json'
+updateHostRequest['id']=hostid
+updateHostRequest['allocationstate']='Disable'
+
+updateHostRequest['apikey']=adminApiKey
+
+request_str='&'.join(['='.join([k,urllib.quote_plus(updateHostRequest[k])]) for k in updateHostRequest.keys()])
+
+sig_str='&'.join(['='.join([k.lower(),urllib.quote_plus(updateHostRequest[k].lower().replace('+','%20'))])for k in sorted(updateHostRequest.iterkeys())])
+sig=hmac.new(adminSecretKey,sig_str,hashlib.sha1)
+sig=hmac.new(adminSecretKey,sig_str,hashlib.sha1).digest()
+sig=base64.encodestring(hmac.new(adminSecretKey,sig_str,hashlib.sha1).digest())
+sig=base64.encodestring(hmac.new(adminSecretKey,sig_str,hashlib.sha1).digest()).strip()
+sig=urllib.quote_plus(base64.encodestring(hmac.new(adminSecretKey,sig_str,hashlib.sha1).digest()).strip())
+
+req=baseurl+request_str+'&signature='+sig
+res=urllib2.urlopen(req)
